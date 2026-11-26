@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SnackLine – Canteen Pre-order Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eaf0f6;--card:#fff;--ink:#12263a;--mute:#5b6b7b;--line:#d5dee8;--acc:#f5a300;--accink:#2b1d00;--ok:#1b8a5a;--warn:#c25a00;--bad:#b3261e;--sel:#12263a;--selink:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1a26;--card:#17283a;--ink:#e8eef5;--mute:#9db0c2;--line:#2a3f55;--sel:#f5a300;--selink:#2b1d00;--ok:#4cd197;--warn:#ffb25a;--bad:#ff8a80}}
+[hidden]{display:none!important}*{box-sizing:inherit}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.45 Figtree,system-ui,sans-serif}
+h1,h2,h3,.num{font-family:"Bricolage Grotesque",system-ui,sans-serif;margin:0}
+.wrap{max-width:480px;margin:0 auto;padding:14px 14px 110px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+header h1{font-size:22px;font-weight:800}
+.seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:3px}
+.seg button{border:0;background:none;color:var(--mute);font:600 14px Figtree,sans-serif;padding:7px 12px;border-radius:8px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--sel);color:var(--selink)}
+button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+.stall{width:100%;text-align:left;cursor:pointer;font:inherit;color:inherit;display:block}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.mute{color:var(--mute);font-size:14px}
+.tag{font-weight:600;font-size:13px;padding:3px 9px;border-radius:99px;border:1.5px solid currentColor}
+.Light{color:var(--ok)}.Moderate{color:var(--warn)}.Packed{color:var(--bad)}
+.meter{display:flex;gap:3px;margin-top:10px}.meter i{flex:1;height:6px;border-radius:3px;background:var(--line)}
+.meter i.on{background:currentColor}
+.item .name{font-weight:600}
+.qty{display:flex;align-items:center;gap:10px}
+.qty button{width:36px;height:36px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:700 18px sans-serif;cursor:pointer}
+.qty span{min-width:18px;text-align:center;font-weight:700}
+.back{background:none;border:0;color:var(--mute);font:600 14px Figtree,sans-serif;padding:6px 0;cursor:pointer;margin-bottom:6px}
+.bar{position:fixed;left:0;right:0;bottom:0;padding:12px 14px calc(12px + env(safe-area-inset-bottom,0px));background:var(--bg);border-top:1px solid var(--line)}
+.bar>div{max-width:480px;margin:0 auto}
+.cta{width:100%;border:0;border-radius:12px;background:var(--acc);color:var(--accink);font:800 17px "Bricolage Grotesque",sans-serif;padding:14px;cursor:pointer}
+.cta:disabled{opacity:.4;cursor:not-allowed}
+.ghost{border:1.5px solid var(--line);background:none;color:var(--ink);border-radius:10px;font:600 14px Figtree,sans-serif;padding:9px 12px;cursor:pointer}
+.qn{font-size:68px;font-weight:800;line-height:1;letter-spacing:-1px}
+.steps{display:flex;margin:16px 0 4px}
+.steps div{flex:1;text-align:center;font-size:13px;color:var(--mute);font-weight:600}
+.steps b{display:block;height:6px;border-radius:3px;background:var(--line);margin-bottom:6px}
+.steps .done{color:var(--ink)}.steps .done b{background:var(--ok)}
+.alert{background:var(--ok);color:#fff;border-radius:14px;padding:14px;margin-bottom:10px;font-weight:600}
+.alert h3{font-size:20px;margin-bottom:2px}
+.vrow{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.chip{display:inline-block;font-size:13px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--line)}
+.note{font-size:13px;color:var(--mute)}.note li{margin:3px 0}
+.seg{flex-wrap:wrap}.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip2{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:9px 12px;font:600 14px Figtree,sans-serif;cursor:pointer}
+.chip2[aria-pressed="true"]{background:var(--sel);color:var(--selink);border-color:var(--sel)}
+#payIn{width:110px;margin-left:6px;padding:8px;border:1.5px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:600 15px Figtree,sans-serif}
+.hero{min-height:calc(100vh - 60px);display:flex;flex-direction:column;justify-content:center;gap:18px}
+.big{font-size:clamp(56px,18vw,92px);line-height:.92;font-weight:800;letter-spacing:-2px}
+.hero ul{list-style:none;padding:0;margin:0;font-weight:600}.hero li{padding:9px 0;border-top:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22300%22%20height=%22300%22%20viewBox=%220%200%20300%20300%22%3E%3Cg%20transform=%22translate(42,52)%20rotate(-12)%22%3E%3Crect%20x=%22-15%22%20y=%22-26%22%20width=%226%22%20height=%2226%22%20rx=%223%22%20fill=%22%23f0c04a%22/%3E%3Crect%20x=%22-7%22%20y=%22-34%22%20width=%226%22%20height=%2234%22%20rx=%223%22%20fill=%22%23e9b53a%22/%3E%3Crect%20x=%221%22%20y=%22-28%22%20width=%226%22%20height=%2228%22%20rx=%223%22%20fill=%22%23f0c04a%22/%3E%3Crect%20x=%229%22%20y=%22-36%22%20width=%226%22%20height=%2236%22%20rx=%223%22%20fill=%22%23e9b53a%22/%3E%3Cpath%20d=%22M-19%20-6%20L19%20-6%20L14%2026%20L-14%2026%20Z%22%20fill=%22%23c8553d%22/%3E%3Cpath%20d=%22M-6%204%20H6%22%20stroke=%22%23f6e2c8%22%20stroke-width=%223%22%20stroke-linecap=%22round%22/%3E%3C/g%3E%3Cg%20transform=%22translate(152,38)%20rotate(10)%22%3E%3Cellipse%20rx=%2232%22%20ry=%2216%22%20fill=%22%23d9a066%22/%3E%3Cpath%20d=%22M-14%20-8%20q4%206%200%2012%20M0%20-10%20q4%207%200%2014%20M14%20-8%20q4%206%200%2012%22%20stroke=%22%23a8683a%22%20stroke-width=%222.5%22%20fill=%22none%22%20stroke-linecap=%22round%22/%3E%3C/g%3E%3Cg%20transform=%22translate(252,76)%22%3E%3Cpath%20d=%22M-28%200%20H28%20A28%2024%200%200%201%20-28%200Z%22%20fill=%22%238c5a3c%22/%3E%3Cpath%20d=%22M-21%200%20A21%2017%200%200%201%2021%200Z%22%20fill=%22%23f4f0e6%22%20stroke=%22%23cfc6b4%22%20stroke-width=%221.5%22/%3E%3Ccircle%20cx=%22-6%22%20cy=%22-8%22%20r=%221.6%22%20fill=%22%23cfc6b4%22/%3E%3Ccircle%20cx=%226%22%20cy=%22-6%22%20r=%221.6%22%20fill=%22%23cfc6b4%22/%3E%3C/g%3E%3Cg%20transform=%22translate(62,178)%20rotate(8)%22%3E%3Cpath%20d=%22M-14%20-20%20L14%20-20%20L10%2024%20L-10%2024Z%22%20fill=%22%23f2a64b%22/%3E%3Crect%20x=%22-17%22%20y=%22-25%22%20width=%2234%22%20height=%227%22%20rx=%223.5%22%20fill=%22%237da35a%22/%3E%3Cpath%20d=%22M5%20-25%20L12%20-42%22%20stroke=%22%23c8553d%22%20stroke-width=%223.5%22%20stroke-linecap=%22round%22/%3E%3C/g%3E%3Cg%20transform=%22translate(168,168)%20rotate(-6)%22%3E%3Cpath%20d=%22M-28%200%20A28%2019%200%200%201%2028%200Z%22%20fill=%22%23d9a066%22/%3E%3Ccircle%20cx=%22-10%22%20cy=%22-8%22%20r=%221.5%22%20fill=%22%23f6e2c8%22/%3E%3Ccircle%20cx=%222%22%20cy=%22-12%22%20r=%221.5%22%20fill=%22%23f6e2c8%22/%3E%3Ccircle%20cx=%2212%22%20cy=%22-7%22%20r=%221.5%22%20fill=%22%23f6e2c8%22/%3E%3Cpath%20d=%22M-30%204%20q7.5%207%2015%200%20t15%200%20t15%200%22%20stroke=%22%237da35a%22%20stroke-width=%225%22%20fill=%22none%22%20stroke-linecap=%22round%22/%3E%3Crect%20x=%22-28%22%20y=%229%22%20width=%2256%22%20height=%228%22%20rx=%224%22%20fill=%22%236b4a35%22/%3E%3Cpath%20d=%22M-28%2019%20H28%20q0%2010%20-10%2010%20H-18%20q-10%200%20-10%20-10Z%22%20fill=%22%23d9a066%22/%3E%3C/g%3E%3Cg%20transform=%22translate(258,182)%20rotate(32)%22%3E%3Cpath%20d=%22M0%20-38%20V38%22%20stroke=%22%23b58a5c%22%20stroke-width=%223%22%20stroke-linecap=%22round%22/%3E%3Ccircle%20cy=%22-20%22%20r=%2210%22%20fill=%22%23e3c391%22%20stroke=%22%23b58a5c%22%20stroke-width=%222%22/%3E%3Ccircle%20cy=%220%22%20r=%2210%22%20fill=%22%23e3c391%22%20stroke=%22%23b58a5c%22%20stroke-width=%222%22/%3E%3Ccircle%20cy=%2220%22%20r=%2210%22%20fill=%22%23e3c391%22%20stroke=%22%23b58a5c%22%20stroke-width=%222%22/%3E%3C/g%3E%3Cg%20transform=%22translate(40,266)%20rotate(-8)%22%3E%3Cellipse%20rx=%2220%22%20ry=%2213%22%20fill=%22%23d9a066%22/%3E%3Cellipse%20cx=%2222%22%20cy=%22-2%22%20rx=%2216%22%20ry=%2211%22%20fill=%22%23e2b176%22/%3E%3Cpath%20d=%22M-8%20-3%20q3%205%200%209%22%20stroke=%22%23a8683a%22%20stroke-width=%222%22%20fill=%22none%22%20stroke-linecap=%22round%22/%3E%3C/g%3E%3Cg%20transform=%22translate(150,268)%20rotate(14)%22%3E%3Cpath%20d=%22M-12%20-18%20L12%20-18%20L16%2020%20L-16%2020%20Z%22%20fill=%22%23f2a64b%22%20opacity=%220%22/%3E%3Cpath%20d=%22M-30%206%20q30%20-34%2060%200%20q-30%2012%20-60%200Z%22%20fill=%22%239bb86a%22/%3E%3Cpath%20d=%22M-22%204%20q22%20-20%2044%200%22%20stroke=%22%236f8f45%22%20stroke-width=%222%22%20fill=%22none%22%20stroke-linecap=%22round%22/%3E%3C/g%3E%3Cg%20transform=%22translate(250,270)%20rotate(-14)%22%3E%3Crect%20x=%22-14%22%20y=%22-24%22%20width=%226%22%20height=%2224%22%20rx=%223%22%20fill=%22%23e9b53a%22/%3E%3Crect%20x=%22-6%22%20y=%22-32%22%20width=%226%22%20height=%2232%22%20rx=%223%22%20fill=%22%23f0c04a%22/%3E%3Crect%20x=%222%22%20y=%22-26%22%20width=%226%22%20height=%2226%22%20rx=%223%22%20fill=%22%23e9b53a%22/%3E%3Crect%20x=%2210%22%20y=%22-30%22%20width=%226%22%20height=%2230%22%20rx=%223%22%20fill=%22%23f0c04a%22/%3E%3Cpath%20d=%22M-18%20-6%20L20%20-6%20L15%2024%20L-13%2024%20Z%22%20fill=%22%23c8553d%22/%3E%3C/g%3E%3Cg%20fill=%22%237da35a%22%3E%3Cpath%20d=%22M110%20120%20l3%20-8%20l3%208%20l8%203%20l-8%203%20l-3%208%20l-3%20-8%20l-8%20-3z%22/%3E%3Cpath%20d=%22M215%20125%20l2%20-6%20l2%206%20l6%202%20l-6%202%20l-2%206%20l-2%20-6%20l-6%20-2z%22/%3E%3Ccircle%20cx=%2212%22%20cy=%22120%22%20r=%223%22/%3E%3Ccircle%20cx=%22285%22%20cy=%2220%22%20r=%223%22/%3E%3Ccircle%20cx=%22105%22%20cy=%22225%22%20r=%223%22/%3E%3Ccircle%20cx=%22220%22%20cy=%22228%22%20r=%223%22/%3E%3C/g%3E%3C/svg%3E") 0 0/300px 300px repeat;opacity:.24}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body::before{opacity:.13}}
+@media (prefers-reduced-motion:no-preference){.alert{animation:pop .35s ease}@keyframes pop{from{transform:scale(.96);opacity:0}}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header id="hdr"><h1>SnackLine</h1>
+    <div class="seg" role="group" aria-label="View">
+      <button id="vS" data-act="view" data-v="student" aria-pressed="true">Student</button>
+      <button id="vV" data-act="view" data-v="vendor" aria-pressed="false">Vendor</button>
+    </div>
+  </header>
+  <main id="app"></main>
+</div>
+<div class="bar" id="bar" hidden><div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script>
+// Paste your Firebase web config here to turn on live sync. Leave empty for local demo mode.
+var FIREBASE_CONFIG={apiKey:"",authDomain:"",databaseURL:"",projectId:"",appId:""};
+var FB=null;
+var STALLS=[
+ {id:"A",name:"thebreadhub",short:"Bread",kind:"Bread and pastries",menu:[["Sweetheart",8],["Pie",12],["Butterscotch",10],["Ham & Cheese Roll",15],["Choco Crinkles",12],["Cinnamon Roll",8],["Coco Buns",10],["Cheese Roll",12],["German Cross",7],["Spanish Bread",7],["Ensaymada",6],["Cheese Streusel",6],["Bagumbayan (pack)",12]]},
+ {id:"B",name:"RCFS Fruits Stand",short:"RCFS",kind:"Fruit cups and empanada",menu:[["Water Melon cup",15],["Mangga cup",15],["Bayabas cup",20],["Pinya cup",20],["Kapayas cup",20],["Ham & Cheese Empanada",15]]},
+ {id:"C",name:"K & I",short:"K & I",kind:"Fish balls, kikiam, fried snacks",menu:[["Home Made Fish Ball (5 pcs)",12,"Balls and kikiam"],["Fish Ball (5 pcs)",20,"Balls and kikiam"],["Squid Ball (4 pcs)",20,"Balls and kikiam"],["Kikiam Ball (5 pcs)",20,"Balls and kikiam"],["Kikiam (3 pcs)",25,"Balls and kikiam"],["Fish Flat (6 pcs)",15,"Fried"],["Squid Roll (4 pcs)",20,"Fried"],["Squid Ring (4 pcs)",40,"Fried"],["Fish Cake (3 pcs)",40,"Fried"],["Fish Tufo (3 pcs)",40,"Fried"],["Fried Fish Fillet (1 pc)",25,"Fried"],["Crab Stick (3 pcs)",40,"Fried"],["Hash Brown (1 pc)",35,"Fried"],["Dynamit (3 pcs)",15,"Fried"],["Cheese Sticks (3 pcs)",25,"Fried"],["Tempura (3 pcs)",25,"Fried"],["Ngonyong (1 pc)",25,"Fried"]]},
+ {id:"D",name:"Vals Food Hub",short:"Vals",kind:"Rice toppings, snacks, drinks",menu:[["Adobong Chicken Liver and Egg",55,"Rice toppings"],["Corned Beef",50,"Rice toppings"],["Sardines w/ Egg",40,"Rice toppings"],["Embutido",40,"Rice toppings"],["Luncheon Meat Egg",55,"Rice toppings"],["Chicken Sisig",50,"Rice toppings"],["Hotdog + Egg",55,"Rice toppings"],["Burger Steak",50,"Rice toppings"],["Hotdog",40,"Rice toppings"],["Pork Sisig",50,"Rice toppings"],["Fried Chicken with Rice",65,"Rice toppings"],["Rice with Adobo Chicken Feet",50,"Rice toppings"],["Rice with Chicken Bola2x",55,"Rice toppings"],["Rice with Bufalo Wings",65,"Rice toppings"],["Hotdog in a Bun, Cheese",40,"Snacks"],["Hotdog in a Bun",30,"Snacks"],["Pancit Canton w/ Bun",38,"Snacks"],["Pancit Canton",28,"Snacks"],["Sweet Orange Juice (small)",10,"Drinks"],["Sweet Orange Juice (medium)",15,"Drinks"],["Sweet Orange Juice (large)",25,"Drinks"],["Dessert (small)",20,"Dessert"],["Dessert (medium)",30,"Dessert"],["Dessert (large)",50,"Dessert"]]},
+ {id:"E",name:"Roy’s Café",short:"Roy’s",kind:"Burgers and drinks",menu:[["Burger",25,"Burger"],["Fries – Barbecue",50,"Fries"],["Fries – Cheese",50,"Fries"],["Fries – Sour Cream",50,"Fries"],["Cucumber Juice",20,"Juice"],["Four Seasons Juice",20,"Juice"],["Sharkfin",25,"Snacks"]]}
+];
+var S={view:"student",screen:"landing",stall:null,cart:{},pay:null,mine:null,dismissed:false,orders:[],seq:{A:0,B:0,C:0,D:0,E:0},vstall:"A",seen:{},loaded:false,vnotice:null};
+function peso(n){return "₱"+n}
+function stallById(id){return STALLS.filter(function(s){return s.id===id})[0]}
+function addOrder(sid,items,status,mine,cash){
+  S.seq[sid]++;
+  var o={id:Date.now()+Math.random(),stall:sid,n:sid+"-"+String(S.seq[sid]).padStart(3,"0"),items:items,status:status,mine:!!mine,cash:cash||0};
+  S.orders.push(o);return o;
+}
+function active(sid){return S.orders.filter(function(o){return o.stall===sid&&o.status!=="Picked up"&&o.status!=="Cancelled"})}
+function waiting(sid){return S.orders.filter(function(o){return o.stall===sid&&(o.status==="Received"||o.status==="Preparing")})}
+function level(sid){var n=waiting(sid).length;return n<=2?"Light":n<=5?"Moderate":"Packed"}
+function waitMin(sid){return Math.max(1,waiting(sid).length*2)}
+// demo data so crowd levels look realistic at first load (local mode only)
+var restored=load();
+(function(){
+ if(restored)return;
+ for(var i=0;i<6;i++)addOrder("D",[["Chicken Sisig",50,1]],i<1?"Preparing":"Received");
+ for(var j=0;j<3;j++)addOrder("C",[["Fish Ball (5 pcs)",20,1]],j<1?"Preparing":"Received");
+ addOrder("A",[["Spanish Bread",7,2]],"Preparing");
+ for(var k=0;k<3;k++)addOrder("E",[["Burger",25,1]],k<1?"Preparing":"Received");
+})();
+function total(items){return items.reduce(function(t,i){return t+i[1]*(i[2]||1)},0)}
+function cartItems(){
+  var s=stallById(S.stall),out=[];
+  s.menu.forEach(function(m,i){var q=S.cart[i]||0;if(q)out.push([m[0],m[1],q])});return out;
+}
+function initDB(){
+  try{
+    if(!window.firebase||!FIREBASE_CONFIG.databaseURL)return;
+    firebase.initializeApp(FIREBASE_CONFIG);FB=firebase.database();
+    FB.ref("orders").on("value",function(snap){
+      var v=snap.val()||{};
+      S.orders=Object.keys(v).map(function(k){var o=v[k];o.key=k;return o}).sort(function(a,b){return a.id-b.id});
+      S.orders.forEach(function(o){
+        var prev=S.seen[o.key];
+        if(S.loaded){
+          if(!prev&&S.view==="vendor"&&o.status==="Received"){S.vnotice=o.n+" · "+stallById(o.stall).name+" · pays with "+peso(o.cash);notify("New order received",o.n+" at "+stallById(o.stall).name)}
+          if(o.id===S.mine&&prev&&prev!=="Ready"&&o.status==="Ready"){S.dismissed=false;notify("Your order is ready!","Show number "+o.n+" at "+stallById(o.stall).name)}
+        }
+        S.seen[o.key]=o.status;
+      });
+      S.loaded=true;render();
+    });
+  }catch(e){FB=null}
+}
+function setStatus(o,s){if(FB&&o.key)FB.ref("orders/"+o.key).update({status:s});else o.status=s}
+function afterPlace(o){S.mine=o.id;S.dismissed=false;S.screen="order";render()}
+function placeOrder(items){
+  var m={t:"place",stall:S.stall,items:items,cash:S.pay};
+  if(HC){HC.send(m);return}
+  afterPlace(apply(m,null));
+}
+var ROOM="SNACK26";
+var ICE={config:{iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:global.stun.twilio.com:3478"},{urls:"turn:openrelay.metered.ca:80",username:"openrelayproject",credential:"openrelayproject"},{urls:"turn:openrelay.metered.ca:443",username:"openrelayproject",credential:"openrelayproject"},{urls:"turn:openrelay.metered.ca:443?transport=tcp",username:"openrelayproject",credential:"openrelayproject"}]}};
+var P=null,HC=null,CONNS=[];
+function mineO(){return S.orders.filter(function(o){return o.id===S.mine})[0]}
+function ready(ps){var c=mineO();if(c&&ps&&ps!=="Ready"&&c.status==="Ready"){S.dismissed=false;notify("Your order is ready!","Show number "+c.n+" at "+stallById(c.stall).name)}}
+function stateMsg(){return {t:"state",orders:S.orders,seq:S.seq}}
+function broadcast(){CONNS.forEach(function(c){try{c.send(stateMsg())}catch(e){}})}
+function apply(m,from){
+  var cm=mineO(),ps=cm&&cm.status,res=null;
+  if(m.t==="place"){
+    res=addOrder(m.stall,m.items,"Received",true,m.cash);
+    S.vstall=res.stall;
+    S.vnotice=res.n+" \u00b7 "+stallById(res.stall).name+" \u00b7 pays with "+peso(res.cash);
+    if(S.view==="vendor")notify("New order received",res.n+" at "+stallById(res.stall).name);
+  }else{
+    S.orders.forEach(function(o){if(String(o.id)===String(m.id)){
+      if(m.t==="cancel"&&o.status==="Received")o.status="Cancelled";
+      if(m.t==="adv")o.status=o.status==="Received"?"Preparing":o.status==="Preparing"?"Ready":o.status==="Ready"?"Picked up":o.status;
+    }});
+  }
+  ready(ps);broadcast();
+  if(res&&from)from.send({t:"placed",id:res.id});
+  return res;
+}
+function act(m){if(HC){HC.send(m);return}apply(m,null)}
+function hostStart(){
+  if(P)return;
+  if(typeof Peer==="undefined"){S.net="Could not load the connection library. Check your internet.";render();return}
+  S.code=ROOM;S.net="Starting...";S.peers=0;
+  P=new Peer("snackline-"+S.code,ICE);
+  P.on("open",function(){S.net="Connected. Other devices can type the code.";render()});
+  P.on("error",function(e){P=null;if(e.type==="unavailable-id"){joinHost(ROOM)}else{S.net="Error: "+e.type+". Try again.";render()}});
+  P.on("connection",function(c){
+    CONNS.push(c);
+    c.on("open",function(){c.send(stateMsg());S.peers=CONNS.length;render()});
+    c.on("data",function(m){apply(m,c);render()});
+    c.on("close",function(){CONNS=CONNS.filter(function(x){return x!==c});S.peers=CONNS.length;render()});
+  });
+  render();
+}
+function joinHost(code){
+  code=(code||"").trim().toUpperCase();if(!code)return;
+  if(typeof Peer==="undefined"){S.net="Could not load the connection library. Check your internet.";render();return}
+  S.net="Connecting...";render();
+  var p=new Peer(undefined,ICE),to=null;
+  p.on("open",function(){
+    var c=p.connect("snackline-"+code,{reliable:true});
+    to=setTimeout(function(){if(!HC){S.net="Could not connect. Make sure the other device already typed the code. If you are on different networks, try the same Wi-Fi or a phone hotspot.";render()}},8000);
+    c.on("open",function(){clearTimeout(to);HC=c;P=p;S.synced=false;S.net="Connected";render()});
+    c.on("data",function(m){
+      if(m.t==="state"){
+        var cm=mineO(),ps=cm&&cm.status,known={},first=!S.synced;
+        S.orders.forEach(function(o){known[o.id]=1});
+        var added=m.orders.filter(function(o){return !known[o.id]&&o.status==="Received"&&o.id!==S.mine});
+        S.orders=m.orders;S.seq=m.seq;S.synced=true;ready(ps);
+        if(!first&&added.length&&S.view==="vendor"){var n=added[added.length-1];S.vstall=n.stall;S.vnotice=n.n+" \u00b7 "+stallById(n.stall).name+" \u00b7 pays with "+peso(n.cash);notify("New order received",n.n+" at "+stallById(n.stall).name)}
+        render()}
+      else if(m.t==="placed"){S.mine=m.id;S.dismissed=false;S.screen="order";render()}
+    });
+    c.on("close",function(){HC=null;S.net="Disconnected from the vendor device";render()});
+  });
+  p.on("error",function(e){S.net=e.type==="peer-unavailable"?"No device has started yet. Try again in a few seconds.":"Error: "+e.type;render()});
+}
+function enterCode(code){
+  code=(code||"").trim().toUpperCase();if(!code)return;
+  if(code!==ROOM){S.net="Wrong code. The code is "+ROOM+".";render();return}
+  hostStart();
+}
+function codeBox(label,btn){
+  return '<p class="mute" style="margin:4px 0 8px">'+label+' <b>'+ROOM+'</b></p><input id="joinIn" maxlength="10" placeholder="Type code" style="width:120px;padding:8px;border:1.5px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:600 15px Figtree,sans-serif;text-transform:uppercase"> <button class="ghost" data-act="join">'+btn+'</button>'+(S.net?'<p class="mute" style="margin:8px 0 0">'+S.net+'</p>':'');
+}
+function linkedCard(){return '<div class="card"><b>Connected \u2713</b><p class="mute" style="margin:4px 0 0">Code '+ROOM+' \u00b7 '+(HC?'joined the shared queue':'devices connected: '+(S.peers||0))+'</p></div>'}
+function linkCard(){return (HC||P)?linkedCard():'<div class="card"><b>Connect to another device</b>'+codeBox('Type the code:','Connect')+'</div>'}
+function vlink(){return (HC||P)?linkedCard():'<div class="card"><b>Vendor login</b>'+codeBox('Type the vendor code:','Enter')+'</div>'}
+function save(){if(HC)return;try{localStorage.setItem("sl_state",JSON.stringify({o:S.orders,q:S.seq,m:S.mine,d:S.dismissed}))}catch(e){}}
+function load(){try{var j=localStorage.getItem("sl_state");if(!j)return false;var s=JSON.parse(j);S.orders=s.o||[];S.seq=s.q||S.seq;S.mine=s.m||null;S.dismissed=!!s.d;return true}catch(e){return false}}
+function askPerm(){try{if("Notification" in window&&Notification.permission==="default")Notification.requestPermission()}catch(e){}}
+function notify(title,body){
+  try{var C=window.AudioContext||window.webkitAudioContext,c=new C(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;g.gain.value=.15;o.start();o.stop(c.currentTime+.35)}catch(e){}
+  try{if(navigator.vibrate)navigator.vibrate([200,100,200])}catch(e){}
+  try{if("Notification" in window&&Notification.permission==="granted")new Notification(title,{body:body})}catch(e){}
+}
+function render(){
+  document.getElementById("vS").setAttribute("aria-pressed",S.view==="student");
+  document.getElementById("vV").setAttribute("aria-pressed",S.view==="vendor");
+  var rd=S.orders.some(function(o){return o.id===S.mine&&o.status==="Ready"})&&!S.dismissed;
+  document.getElementById("vS").textContent="Student"+(rd?" ●":"");
+  document.getElementById("vV").textContent="Vendor"+(S.vnotice?" ●":"");
+  var h="",bar=document.getElementById("bar"),bh="";
+  document.getElementById("hdr").hidden=(S.screen==="landing"&&S.view==="student");
+  if(S.view==="student"&&S.screen==="landing"){h=landingView()}
+  else if(S.view==="student"){
+    var mine=S.orders.filter(function(o){return o.id===S.mine})[0];
+    if(mine&&S.screen==="order"){h=orderView(mine)}
+    else if(S.screen==="menu"){var r=menuView();h=r[0];bh=r[1]}
+    else h=stallsView();
+  } else h=vendorView();
+  document.getElementById("app").innerHTML=h;
+  bar.hidden=!bh;bar.firstElementChild.innerHTML=bh;
+  save();
+}
+function landingView(){
+  return '<section class="hero"><h1 class="big">ARE YOU<br>HUNGRY?</h1><p style="font-size:18px;margin:0">Skip the line in the walkway. Order ahead and wait wherever you’re comfortable.</p><ul><li>Check how busy each stall is</li><li>Order and get your queue number</li><li>Get an alert when your food is ready</li></ul><button class="cta" data-act="start">Start ordering</button><div><button class="ghost" data-act="vendorstart">I’m a vendor</button></div></section>';
+}
+function stallsView(){
+  var h='<h2>Where do you want to buy?</h2><p class="mute">Check how busy each stall is, then order ahead. You won’t need to line up in the walkway.</p>';
+  var mo=S.orders.filter(function(o){return o.id===S.mine&&o.status!=="Picked up"&&o.status!=="Cancelled"})[0];
+  if(mo)h+='<button class="cta" data-act="vieworder" style="margin-bottom:12px">View my order '+mo.n+'</button>';
+  h+=linkCard();
+  STALLS.forEach(function(s){
+    var L=level(s.id),n=waiting(s.id).length,on=L==="Light"?1:L==="Moderate"?3:5;
+    var m="";for(var i=0;i<6;i++)m+='<i class="'+(i<on?"on":"")+'"></i>';
+    h+='<button class="card stall" data-act="stall" data-id="'+s.id+'"><div class="row"><h3>'+s.name+'</h3><span class="tag '+L+'">'+L+'</span></div>'+
+    '<div class="mute">'+s.kind+'</div><div class="mute">'+n+' order'+(n===1?"":"s")+' in line · about '+waitMin(s.id)+' min wait</div><div class="meter '+L+'" aria-hidden="true">'+m+'</div></button>';
+  });
+  h+=notes();return h;
+}
+function menuView(){
+  var s=stallById(S.stall),L=level(s.id);
+  var h='<button class="back" data-act="home">‹ All stalls</button><div class="row"><h2>'+s.name+'</h2><span class="tag '+L+'">'+L+'</span></div><p class="mute">About '+waitMin(s.id)+' min before your order is ready.</p>';
+  var last="";
+  s.menu.forEach(function(m,i){
+    if(m[2]&&m[2]!==last){last=m[2];h+='<h3 style="margin:14px 0 8px">'+last+'</h3>'}
+    h+='<div class="card row item"><div><div class="name">'+m[0]+'</div><div class="mute">'+peso(m[1])+'</div></div><div class="qty"><button data-act="dec" data-i="'+i+'" aria-label="Remove one '+m[0]+'">−</button><span>'+(S.cart[i]||0)+'</span><button data-act="inc" data-i="'+i+'" aria-label="Add one '+m[0]+'">+</button></div></div>';
+  });
+  var items=cartItems(),t=total(items),cnt=items.reduce(function(a,i){return a+i[2]},0);
+  if(cnt)h+=payCard(t);
+  var ok=cnt&&S.pay&&S.pay>=t;
+  var bh='<button class="cta" data-act="place"'+(ok?"":" disabled")+'>'+(!cnt?"Add items to order":!S.pay?"Choose how much you’ll pay with":S.pay<t?"Amount is less than total":"Place order · "+peso(t))+'</button>';
+  return [h,bh];
+}
+function payCard(t){
+  var vals=[20,50,100,200,500,1000],h='<div class="card"><h3>Payment (cash)</h3><p class="mute" style="margin:4px 0 10px">Tell the vendor how much you’ll hand over so your change is ready.</p><div class="chips"><button class="chip2" data-act="pay" data-v="'+t+'" aria-pressed="'+(S.pay===t)+'">Exact '+peso(t)+'</button>';
+  vals.forEach(function(v){if(v>t)h+='<button class="chip2" data-act="pay" data-v="'+v+'" aria-pressed="'+(S.pay===v)+'">'+peso(v)+'</button>'});
+  var custom=S.pay&&S.pay!==t&&vals.indexOf(S.pay)<0;
+  h+='</div><p class="mute" style="margin:10px 0 0">Other amount<input id="payIn" type="number" inputmode="numeric" min="'+t+'" placeholder="₱" value="'+(custom?S.pay:"")+'"></p>';
+  if(S.pay&&S.pay>=t)h+='<div class="row" style="margin-top:10px"><b>Your change</b><b>'+peso(S.pay-t)+'</b></div>';
+  return h+'</div>';
+}
+function orderView(o){
+  var st=["Received","Preparing","Ready"],idx=st.indexOf(o.status),s=stallById(o.stall);
+  var ahead=S.orders.filter(function(x){return x.stall===o.stall&&(x.status==="Received"||x.status==="Preparing")&&x.id<o.id}).length;
+  var h="";
+  if(o.status==="Ready"&&!S.dismissed)h+='<div class="alert" role="alert"><h3>Your order is ready!</h3>Go to '+s.name+' and show number '+o.n+'. Pay at pickup.</div>';
+  if(o.status==="Picked up")h+='<div class="card"><h3>Order complete</h3><p class="mute">Thanks! You can start a new order anytime.</p><button class="ghost" data-act="new">Order again</button></div>';
+  else if(o.status==="Cancelled")h+='<div class="card"><h3>Order cancelled</h3><button class="ghost" data-act="new">Start a new order</button></div>';
+  else{
+    h+='<div class="card"><div class="mute">Your queue number · '+s.name+'</div><div class="num qn">'+o.n+'</div>';
+    h+='<div class="steps">'+st.map(function(x,i){return '<div class="'+(i<=idx?"done":"")+'"><b></b>'+x+'</div>'}).join("")+'</div>';
+    h+='<p class="mute" style="margin-bottom:0">'+(o.status==="Ready"?"Ready for pickup.":ahead+" order"+(ahead===1?"":"s")+" ahead of you · about "+Math.max(1,(ahead+1)*2)+" min. You can wait anywhere, not in the line.")+'</p></div>';
+  }
+  h+='<div class="card"><h3>Your order</h3>'+o.items.map(function(i){return '<div class="row"><span>'+i[2]+'× '+i[0]+'</span><span>'+peso(i[1]*i[2])+'</span></div>'}).join("")+'<hr style="border:0;border-top:1px solid var(--line)"><div class="row"><b>Total</b><b>'+peso(total(o.items))+'</b></div>'+(o.cash?'<div class="row mute"><span>You’ll pay with</span><span>'+peso(o.cash)+'</span></div><div class="row"><b>Change ready</b><b>'+peso(o.cash-total(o.items))+'</b></div>':'')+'</div>';
+  if(o.status==="Received")h+='<button class="ghost" data-act="cancel">Cancel order</button>';
+  if(o.status==="Ready"&&!S.dismissed)h+=' <button class="ghost" data-act="dismiss">Dismiss alert</button>';
+  return h;
+}
+function vendorView(){
+  var h='<h2>Vendor queue</h2><p class="mute">Pretend you are the stall. Updating an order here changes what the student sees.</p>'+vlink()+(S.vnotice?'<div class="alert" role="alert"><h3>New order received</h3>'+S.vnotice+' <button class="ghost" data-act="vdismiss" style="margin-left:8px;color:#fff;border-color:#fff">OK</button></div>':"")+'<div class="seg" style="margin-bottom:12px">'+
+  STALLS.map(function(s){return '<button data-act="vstall" data-id="'+s.id+'" aria-pressed="'+(S.vstall===s.id)+'">'+s.short+'</button>'}).join("")+'</div>';
+  var list=active(S.vstall);
+  if(!list.length)h+='<div class="card mute">No active orders. New orders appear here.</div>';
+  list.forEach(function(o){
+    var next=o.status==="Received"?["Start preparing","prep"]:o.status==="Preparing"?["Mark ready","ready"]:["Picked up","pick"];
+    h+='<div class="card"><div class="vrow"><div><b class="num" style="font-size:20px">'+o.n+'</b> <span class="chip">'+o.status+'</span>'+(o.mine?' <span class="chip">Student order</span>':"")+'<div class="mute">'+o.items.map(function(i){return (i[2]||1)+"× "+i[0]}).join(", ")+'</div>'+(o.cash?'<div><b>Cash '+peso(o.cash)+' · prepare change '+peso(o.cash-total(o.items))+'</b></div>':'')+'</div><button class="ghost" data-act="adv" data-id="'+o.id+'">'+next[0]+'</button></div></div>';
+  });
+  h+='<button class="ghost" data-act="resetdemo">Reset demo data (new tester)</button>';
+  return h;
+}
+function notes(){
+  return '<div class="card note"><b>About this prototype</b><ul><li><b>Working:</b> real stalls and menus, cash and change preparation, stall crowd indicator, cart, queue number, live order status, ready alert, vendor queue, alerts with sound, vibration, and an on-screen message. Student and vendor can share one device (switch with the tabs) or use two devices connected with a code.</li><li><b>Not yet working (proposed):</b> real payment, a permanent online server, SMS or push notifications when the app is closed, student login.</li></ul></div>';
+}
+document.addEventListener("click",function(e){
+  var b=e.target.closest("[data-act]");if(!b)return;
+  var a=b.dataset.act,id=b.dataset.id;
+  if(a==="view"){S.view=b.dataset.v}
+  else if(a==="start"){askPerm();S.screen="stalls"}
+  else if(a==="vendorstart"){askPerm();S.view="vendor";S.screen="stalls"}
+  else if(a==="stall"){S.stall=id;S.cart={};S.pay=null;S.screen="menu"}
+  else if(a==="pay"){S.pay=parseInt(b.dataset.v,10)}
+  else if(a==="home"){S.screen="stalls"}
+  else if(a==="inc"){var i=b.dataset.i;S.cart[i]=Math.min(9,(S.cart[i]||0)+1);S.pay=null}
+  else if(a==="dec"){var j=b.dataset.i;S.cart[j]=Math.max(0,(S.cart[j]||0)-1);S.pay=null}
+  else if(a==="place"){var items=cartItems();if(!items.length||!S.pay||S.pay<total(items))return;placeOrder(items);return}
+  else if(a==="cancel"){act({t:"cancel",id:S.mine})}
+  else if(a==="dismiss"){S.dismissed=true}
+  else if(a==="new"){S.mine=null;S.screen="stalls"}
+  else if(a==="vstall"){S.vstall=id}
+  else if(a==="vdismiss"){S.vnotice=null}
+  else if(a==="resetdemo"){if(confirm("Reset all orders and start fresh?")){try{localStorage.removeItem("sl_state")}catch(e){}location.reload();return}}
+  else if(a==="vieworder"){S.screen="order"}
+  else if(a==="adv"){act({t:"adv",id:id})}
+  else if(a==="hoststart"){hostStart();return}
+  else if(a==="join"){enterCode((document.getElementById("joinIn")||{}).value);return}
+  render();
+});
+document.addEventListener("change",function(e){if(e.target.id==="payIn"){var v=parseInt(e.target.value,10);S.pay=v>0?v:null;render()}});
+window.addEventListener("storage",function(e){
+  if(e.key!=="sl_state")return;
+  var before=S.orders.length,pm=S.orders.filter(function(o){return o.id===S.mine})[0],ps=pm&&pm.status;
+  if(!load())return;
+  var cm=S.orders.filter(function(o){return o.id===S.mine})[0];
+  if(cm&&ps&&ps!=="Ready"&&cm.status==="Ready"){S.dismissed=false;notify("Your order is ready!","Show number "+cm.n+" at "+stallById(cm.stall).name)}
+  if(S.view==="vendor"&&S.orders.length>before){var n=S.orders[S.orders.length-1];S.vnotice=n.n+" · "+stallById(n.stall).name+" · pays with "+peso(n.cash);notify("New order received",n.n+" at "+stallById(n.stall).name)}
+  render();
+});
+render();
+</script>
+</body>
+</html>
